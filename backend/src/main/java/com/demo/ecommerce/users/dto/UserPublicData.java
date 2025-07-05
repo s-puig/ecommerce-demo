@@ -1,13 +1,11 @@
 package com.demo.ecommerce.users.dto;
 
-import com.demo.ecommerce.users.User;
-
-public class UserResponse {
+public class UserPublicData {
     private Long id;
     private String name;
     private String email;
 
-    public UserResponse(Long id, String name, String email) {
+    public UserPublicData(Long id, String name, String email) {
         this.id = id;
         this.name = name;
         this.email = email;

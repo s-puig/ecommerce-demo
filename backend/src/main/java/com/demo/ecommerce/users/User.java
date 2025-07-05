@@ -31,6 +31,18 @@ public class User {
     @Column(name="updatedAt")
     private Instant updatedAt;
 
+    public User(Long id, String name, String email, String password, EnumSet<Role> role) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+
+        Instant now = Instant.now();
+        this.createdAt = now;
+        this.updatedAt = now;
+    }
+
     public Long getId() {
         return id;
     }

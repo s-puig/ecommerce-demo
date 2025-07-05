@@ -2,7 +2,7 @@ package com.demo.ecommerce.users;
 
 import com.demo.ecommerce.common.exceptions.ResourceNotFoundException;
 import com.demo.ecommerce.users.dto.UserCreate;
-import com.demo.ecommerce.users.dto.UserResponse;
+import com.demo.ecommerce.users.dto.UserPublicData;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -21,7 +21,7 @@ public class UserController {
 
     @Operation(summary = "Get user by id")
     @GetMapping("{id}")
-    public ResponseEntity<UserResponse> getUser(@PathVariable long id){
+    public ResponseEntity<UserPublicData> getUser(@PathVariable long id){
         Optional<User> user = userService.find(id);
         if (user.isEmpty()) throw new ResourceNotFoundException("User with id %s does not exist".formatted(id));
         return ResponseEntity.ok().body(userMapper.entityToResponse(user.get()));
@@ -29,13 +29,13 @@ public class UserController {
 
     @Operation(summary = "Replace user by id")
     @PutMapping("{id}")
-    public ResponseEntity<UserResponse> replaceUser(@PathVariable long id, @RequestBody UserCreate user) {
+    public ResponseEntity<UserPublicData> replaceUser(@PathVariable long id, @RequestBody UserCreate user) {
         throw new UnsupportedOperationException();
     }
 
     @Operation(summary = "Create new user")
     @PostMapping
-    public ResponseEntity<UserResponse> addUser(@RequestBody UserCreate user) {
+    public ResponseEntity<UserPublicData> addUser(@RequestBody UserCreate user) {
         throw new UnsupportedOperationException();
     }
 
@@ -57,7 +57,7 @@ public class UserController {
     **/
     @Operation(summary = "Patch a user")
     @PatchMapping(path = "{id}", consumes = "application/merge-patch+json")
-    public ResponseEntity<UserResponse> patchMergeUser(@PathVariable long id, @RequestBody UserResponse user) {
+    public ResponseEntity<UserPublicData> patchMergeUser(@PathVariable long id, @RequestBody UserPublicData user) {
         return ResponseEntity.badRequest().body(user);
     }
 
