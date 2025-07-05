@@ -1,6 +1,7 @@
 package com.demo.ecommerce.users;
 
 import com.demo.ecommerce.common.exceptions.ResourceNotFoundException;
+import com.demo.ecommerce.users.dto.UserCreate;
 import com.demo.ecommerce.users.dto.UserResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +27,18 @@ public class UserController {
         return ResponseEntity.ok().body(userMapper.entityToResponse(user.get()));
     }
 
+    @Operation(summary = "Replace user by id")
+    @PutMapping("{id}")
+    public ResponseEntity<UserResponse> replaceUser(@PathVariable long id, @RequestBody UserCreate user) {
+        throw new UnsupportedOperationException();
+    }
+
     @Operation(summary = "Create new user")
     @PostMapping
-    public ResponseEntity<UserResponse> addUser(@RequestBody UserResponse user) {
-        return ResponseEntity.badRequest().body(user);
+    public ResponseEntity<UserResponse> addUser(@RequestBody UserCreate user) {
+        throw new UnsupportedOperationException();
     }
+
 
     /**  Patches a User resource by using JSON Merge (see RFC 7000).
         <p>This method accepts a JSON payload with one or more fields to update.
@@ -53,7 +61,9 @@ public class UserController {
         return ResponseEntity.badRequest().body(user);
     }
 
-    /**
+
+
+    /*
      * Applies a JSON Patch (RFC 6902) to a User resource.
      *
      * <p>The request body must be a JSON Patch document describing the operations
@@ -73,8 +83,8 @@ public class UserController {
      * @throws ResourceNotFoundException if no user with the given ID exists
      * @throws PatchFailedException if the patch cannot be applied
      */
-    @PatchMapping(path = "{id}", consumes = "application/json-patch+json")
+    /*@PatchMapping(path = "{id}", consumes = "application/json-patch+json")
     public ResponseEntity<UserResponse> patchUser(@PathVariable long id, @RequestBody String user) {
         return ResponseEntity.ok().body(userMapper.entityToResponse(userService.find(id).get()));
-    }
+    }*/
 }
