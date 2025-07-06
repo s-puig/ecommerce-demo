@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(path = "users", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "api/users", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
     @Autowired
     UserService userService;
