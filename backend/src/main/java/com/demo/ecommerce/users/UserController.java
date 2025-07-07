@@ -35,8 +35,8 @@ public class UserController {
 
     @Operation(summary = "Create new user")
     @PostMapping
-    public ResponseEntity<UserPublicData> addUser(@RequestBody UserCreate user) {
-        throw new UnsupportedOperationException();
+    public ResponseEntity<UserPublicData> addUser(@RequestBody UserCreate createUser) {
+        return ResponseEntity.ok().body(userMapper.entityToResponse(userService.createUser(createUser)));
     }
 
 

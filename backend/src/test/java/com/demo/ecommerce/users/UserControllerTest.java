@@ -1,6 +1,7 @@
 package com.demo.ecommerce.users;
 
 import com.demo.ecommerce.common.annotations.ImportTestContext;
+import com.demo.ecommerce.users.dto.UserCreate;
 import com.demo.ecommerce.users.dto.UserPublicData;
 import com.fasterxml.jackson.databind.ObjectMapper;
 /*import org.junit.jupiter.api.Tag;
@@ -9,8 +10,12 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+
+import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 
@@ -40,18 +45,45 @@ public class UserControllerTest {
     }
 
     @Test
-    void get_returnUserPublic() throws Exception {
+    void get_existingUser() throws Exception {
         Long userId = 10L;
         String name = "Test";
         String email = "test@outlook.com";
 
-        User user = new User(userId, name, email, "test", EnumSet.of(Role.CUSTOMER));
+        User user = new User(name, email, "test", EnumSet.of(Role.CUSTOMER));
+        user.setId(10L);
         UserPublicData userDto = new UserPublicData(userId, name, email);
 
-        when(userService.find(10L)).thenReturn(Optional.of(user));
+        when(userService.find(userId)).thenReturn(Optional.of(user));
 
         mockMvc.perform(get("/api/users/{id}", userId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(userDto)));
+    }
+
+    @Test
+    void get_userNotFound() throws Exception {
+        Long userId = 10L;
+        when(userService.find(userId)).thenReturn(Optional.empty());
+
+        mockMvc.perform(get("/api/users/{id}", userId))
+                .andExpect(status().is(404));
+    }
+
+    @Test
+    void post_validUser() throws Exception {
+        String name = "Test";
+        String email = "test@outlook.com";
+        String password = "TestPassword";
+        EnumSet<Role> roles = EnumSet.of(Role.CUSTOMER);
+        UserCreate newUser = new UserCreate(name, email, password, roles);
+        User user = new User(name, email, password, roles);
+
+        when(userService.save(any(User.class))).thenReturn(user);
+
+        mockMvc.perform(post("/api/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(newUser)))
+                .andExpect(status().isOk());
     }
 }
