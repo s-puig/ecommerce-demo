@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.Optional;
 
 @RestController
@@ -27,16 +29,18 @@ public class UserController {
         return ResponseEntity.ok().body(userMapper.entityToResponse(user.get()));
     }
 
-    @Operation(summary = "Replace user by id")
+    @Operation(summary = "Update user by id")
     @PutMapping("{id}")
-    public ResponseEntity<UserPublicData> replaceUser(@PathVariable long id, @RequestBody UserCreate user) {
-        throw new UnsupportedOperationException();
+    public ResponseEntity<UserPublicData> updateUser(@PathVariable long id, @RequestBody UserCreate user) {
+        return ResponseEntity.ok().body(userMapper.entityToResponse(userService.updateUser(id, user)));
     }
 
     @Operation(summary = "Create new user")
     @PostMapping
     public ResponseEntity<UserPublicData> addUser(@RequestBody UserCreate createUser) {
-        return ResponseEntity.ok().body(userMapper.entityToResponse(userService.createUser(createUser)));
+        User user = userService.createUser(createUser);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("{id}").build(user.getId());
+        return ResponseEntity.created(location).body(userMapper.entityToResponse(user));
     }
 
 
@@ -55,12 +59,14 @@ public class UserController {
         @return Response containing the patched UserDTO
         @throws ResourceNotFoundException if no user with the given ID exists
     **/
+    /*
+    TODO: Finish merge patch
     @Operation(summary = "Patch a user")
     @PatchMapping(path = "{id}", consumes = "application/merge-patch+json")
     public ResponseEntity<UserPublicData> patchMergeUser(@PathVariable long id, @RequestBody UserPublicData user) {
         return ResponseEntity.badRequest().body(user);
     }
-
+    */
 
 
     /*
@@ -83,8 +89,11 @@ public class UserController {
      * @throws ResourceNotFoundException if no user with the given ID exists
      * @throws PatchFailedException if the patch cannot be applied
      */
-    /*@PatchMapping(path = "{id}", consumes = "application/json-patch+json")
+    /*
+    TODO: Finish patch
+    @PatchMapping(path = "{id}", consumes = "application/json-patch+json")
     public ResponseEntity<UserResponse> patchUser(@PathVariable long id, @RequestBody String user) {
         return ResponseEntity.ok().body(userMapper.entityToResponse(userService.find(id).get()));
-    }*/
+    }
+    */
 }
