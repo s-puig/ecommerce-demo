@@ -30,13 +30,8 @@ public class User {
     @LastModifiedDate
     @Column(name="updatedAt")
     private Instant updatedAt;
-
-    public User(String name, String email, String password, EnumSet<Role> role) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-    }
+    @Version
+    private Integer version;
 
     public Long getId() {
         return id;
@@ -92,5 +87,13 @@ public class User {
 
     public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 }
