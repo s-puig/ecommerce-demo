@@ -24,23 +24,23 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    private Optional<User> create(User user) {
+    private User create(User user) throws RuntimeException {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        return Optional.of(save(user));
+        return save(user);
     }
 
     // TODO: We probably shouldn't use a controller DTO for domain mapping, instead should be some kind of command
     //  but it should be fine since it is a small app
     @Transactional
-    public User createUser(UserCreate userCreate) {
+    public User createUser(UserCreate userCreate) throws RuntimeException {
         User user = userMapper.createToEntity(userCreate);
 
-        return create(user).get();
+        return create(user);
     }
 
     @Transactional
-    public User updateUser(long id, UserCreate userUpdate) {
+    public User updateUser(long id, UserCreate userUpdate) throws RuntimeException {
         Optional<User> maybeUser = find(id);
 
         if (maybeUser.isEmpty()) throw new ResourceNotFoundException();
