@@ -6,7 +6,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.Instant;
-import java.util.EnumSet;
 
 @Setter
 @Getter
@@ -30,7 +29,7 @@ public class User {
     private String password;
     @Column(name="role")
     @Enumerated(EnumType.STRING)
-    private EnumSet<Role> role;
+    private Role role;
     @CreatedDate
     @Column(name="createdAt")
     private Instant createdAt;

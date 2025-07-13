@@ -20,7 +20,7 @@ public class UserService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    public Optional<User> find(long id) {
+    public Optional<User> findById(long id) {
         return userRepository.findById(id);
     }
 
@@ -41,7 +41,7 @@ public class UserService {
 
     @Transactional
     public User updateUser(long id, UserCreate userUpdate) throws RuntimeException {
-        Optional<User> maybeUser = find(id);
+        Optional<User> maybeUser = findById(id);
 
         if (maybeUser.isEmpty()) throw new ResourceNotFoundException();
 

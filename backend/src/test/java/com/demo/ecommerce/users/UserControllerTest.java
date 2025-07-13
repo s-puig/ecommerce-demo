@@ -19,8 +19,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
-
-import java.util.EnumSet;
 import java.util.Optional;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -41,7 +39,7 @@ public class UserControllerTest {
 
     @DisplayName("Get a user")
     @Test
-    void get_existingUser() throws Exception {
+    void getExistingUser() throws Exception {
         Long userId = 10L;
         String name = "Test";
         String email = "test@outlook.com";
@@ -54,7 +52,7 @@ public class UserControllerTest {
 
         UserPublicData userDto = new UserPublicData(userId, name, email);
 
-        when(userService.find(userId)).thenReturn(Optional.of(user));
+        when(userService.findById(userId)).thenReturn(Optional.of(user));
 
         mockMvc.perform(get("/api/users/{id}", userId))
                 .andExpect(status().isOk())
@@ -63,9 +61,9 @@ public class UserControllerTest {
 
     @DisplayName("Get a user that does not exist")
     @Test
-    void get_userNotFound() throws Exception {
-        Long userId = 10L;
-        when(userService.find(userId)).thenReturn(Optional.empty());
+    void getUserNotFound() throws Exception {
+        long userId = 10L;
+        when(userService.findById(userId)).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/api/users/{id}", userId))
                 .andExpect(status().isNotFound());
@@ -73,16 +71,16 @@ public class UserControllerTest {
 
     @DisplayName("Create a user")
     @Test
-    void create_user() throws Exception {
+    void createUser() throws Exception {
         String name = "Test";
         String email = "test@outlook.com";
         String password = "TestPassword";
-        EnumSet<Role> roles = EnumSet.of(Role.CUSTOMER);
-        UserCreate newUser = new UserCreate(name, email, password, roles);
+        Role role = Role.CUSTOMER;
+        UserCreate newUser = new UserCreate(name, email, password, role);
         User user = User.builder()
                 .id(1L)
                 .name(name)
-                .role(roles)
+                .role(role)
                 .email(email)
                 .password(password)
                 .build();
@@ -97,18 +95,18 @@ public class UserControllerTest {
 
     @DisplayName("Update a user")
     @Test
-    void update_user() throws Exception {
+    void updateUser() throws Exception {
         Long userId = 10L;
         String name = "Test";
         String email = "test@outlook.com";
         String password = "TestPassword";
-        EnumSet<Role> roles = EnumSet.of(Role.CUSTOMER);
-        UserCreate newUser = new UserCreate(name, email, password, roles);
+        Role role = Role.CUSTOMER;
+        UserCreate newUser = new UserCreate(name, email, password, role);
         User user = User.builder()
                 .id(userId)
                 .name(name)
                 .email(email)
-                .role(roles)
+                .role(role)
                 .build();
 
         when(userService.updateUser(eq(userId), any(UserCreate.class))).thenReturn(user);
@@ -121,13 +119,13 @@ public class UserControllerTest {
 
     @DisplayName("Update an user that does not exist")
     @Test
-    void update_user_not_found() throws Exception {
+    void updateUserNotFound() throws Exception {
         Long userId = 10L;
         String name = "Test";
         String email = "test@outlook.com";
         String password = "TestPassword";
-        EnumSet<Role> roles = EnumSet.of(Role.CUSTOMER);
-        UserCreate newUser = new UserCreate(name, email, password, roles);
+        Role role = Role.CUSTOMER;
+        UserCreate newUser = new UserCreate(name, email, password, role);
 
         when(userService.updateUser(eq(userId), any(UserCreate.class))).thenThrow(new ResourceNotFoundException());
 
@@ -139,7 +137,7 @@ public class UserControllerTest {
 
     @DisplayName("Delete a user returns NoContent")
     @Test
-    void delete_user() throws Exception {
+    void deleteUser() throws Exception {
         long id = 1L;
 
         doNothing().when(userService).deleteById(id);
@@ -150,7 +148,7 @@ public class UserControllerTest {
 
     @DisplayName("Delete a user not found returns 404")
     @Test
-    void delete_user_not_found() throws Exception {
+    void deleteUserNotFound() throws Exception {
         long id = 1L;
 
         doThrow(new ResourceNotFoundException()).when(userService).deleteById(id);

@@ -25,7 +25,7 @@ public class UserController {
     @Operation(summary = "Get user by id")
     @GetMapping("{id}")
     public ResponseEntity<UserPublicData> getUser(@PathVariable long id){
-        Optional<User> user = userService.find(id);
+        Optional<User> user = userService.findById(id);
         if (user.isEmpty()) throw new ResourceNotFoundException("User with id %s does not exist".formatted(id));
         return ResponseEntity.ok().body(userMapper.entityToResponse(user.get()));
     }
