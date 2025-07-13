@@ -53,6 +53,12 @@ public class UserService {
     }
 
     @Transactional
+    public void deleteById(long id) throws ResourceNotFoundException {
+        if (!userRepository.existsById(id)) throw new ResourceNotFoundException();
+        userRepository.deleteById(id);
+    }
+
+    @Transactional
     // TODO: Throw errors on validation error.
     public User save(User user) {
         return userRepository.save(user);

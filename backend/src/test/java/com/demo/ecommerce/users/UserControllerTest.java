@@ -16,13 +16,13 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 
 import java.util.EnumSet;
 import java.util.Optional;
 
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -134,6 +134,28 @@ public class UserControllerTest {
         mockMvc.perform(put("/api/users/{id}", userId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(newUser)))
+                .andExpect(status().isNotFound());
+    }
+
+    @DisplayName("Delete a user returns NoContent")
+    @Test
+    void delete_user() throws Exception {
+        long id = 1L;
+
+        doNothing().when(userService).deleteById(id);
+
+        mockMvc.perform(delete("/api/users/{id}", id))
+                .andExpect(status().isNoContent());
+    }
+
+    @DisplayName("Delete a user not found returns 404")
+    @Test
+    void delete_user_not_found() throws Exception {
+        long id = 1L;
+
+        doThrow(new ResourceNotFoundException()).when(userService).deleteById(id);
+
+        mockMvc.perform(delete("/api/users/{id}", id))
                 .andExpect(status().isNotFound());
     }
 }

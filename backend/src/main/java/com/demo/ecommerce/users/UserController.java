@@ -5,6 +5,7 @@ import com.demo.ecommerce.users.dto.UserCreate;
 import com.demo.ecommerce.users.dto.UserPublicData;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,6 +44,12 @@ public class UserController {
         return ResponseEntity.created(location).body(userMapper.entityToResponse(user));
     }
 
+    @Operation(summary = "Delete user by id")
+    @DeleteMapping("{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteUser(@PathVariable long id) throws ResourceNotFoundException {
+        userService.deleteById(id);
+    }
 
     /**  Patches a User resource by using JSON Merge (see RFC 7000).
         <p>This method accepts a JSON payload with one or more fields to update.
