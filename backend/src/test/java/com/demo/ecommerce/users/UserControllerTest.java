@@ -51,10 +51,12 @@ public class UserControllerTest {
         String name = "Test";
         String email = "test@outlook.com";
 
-        User user = new User();
-        user.setName(name);
-        user.setEmail(email);
-        user.setId(10L);
+        User user = User.builder()
+                .id(userId)
+                .name(name)
+                .email(email)
+                .build();
+
         UserPublicData userDto = new UserPublicData(userId, name, email);
 
         when(userService.find(userId)).thenReturn(Optional.of(user));
@@ -80,12 +82,13 @@ public class UserControllerTest {
         String password = "TestPassword";
         EnumSet<Role> roles = EnumSet.of(Role.CUSTOMER);
         UserCreate newUser = new UserCreate(name, email, password, roles);
-        User user = new User();
-        user.setId(1L);
-        user.setName(name);
-        user.setPassword(password);
-        user.setEmail(email);
-        user.setRole(roles);
+        User user = User.builder()
+                .id(1L)
+                .name(name)
+                .role(roles)
+                .email(email)
+                .password(password)
+                .build();
 
         when(userService.createUser(any(UserCreate.class))).thenReturn(user);
 
@@ -103,11 +106,12 @@ public class UserControllerTest {
         String password = "TestPassword";
         EnumSet<Role> roles = EnumSet.of(Role.CUSTOMER);
         UserCreate newUser = new UserCreate(name, email, password, roles);
-        User user = new User();
-        user.setName(name);
-        user.setPassword(password);
-        user.setEmail(email);
-        user.setRole(roles);
+        User user = User.builder()
+                .id(userId)
+                .name(name)
+                .email(email)
+                .role(roles)
+                .build();
 
         when(userService.updateUser(eq(userId), any(UserCreate.class))).thenReturn(user);
 
