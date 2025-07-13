@@ -51,7 +51,7 @@ public class UserController {
         userService.deleteById(id);
     }
 
-    /**  Patches a User resource by using JSON Merge (see RFC 7000).
+    /*  Patches a User resource by using JSON Merge (see RFC 7000).
         <p>This method accepts a JSON payload with one or more fields to update.
         Fields not provided in the request will remain unchanged.</p>
         <p>Example request body:</p>
@@ -65,7 +65,7 @@ public class UserController {
         @param user User with fields to be updated
         @return Response containing the patched UserDTO
         @throws ResourceNotFoundException if no user with the given ID exists
-    **/
+    */
     /*
     TODO: Finish merge patch
     @Operation(summary = "Patch a user")
