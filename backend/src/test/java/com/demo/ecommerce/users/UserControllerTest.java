@@ -5,8 +5,7 @@ import com.demo.ecommerce.common.exceptions.ResourceNotFoundException;
 import com.demo.ecommerce.users.dto.UserCreate;
 import com.demo.ecommerce.users.dto.UserPublicData;
 import com.fasterxml.jackson.databind.ObjectMapper;
-/*import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;*/
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,11 +39,7 @@ public class UserControllerTest {
     @MockitoBean
     private UserService userService;
 
-    @Test
-    void testController() {
-        assert(true);
-    }
-
+    @DisplayName("Get a user")
     @Test
     void get_existingUser() throws Exception {
         Long userId = 10L;
@@ -66,6 +61,7 @@ public class UserControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(userDto)));
     }
 
+    @DisplayName("Get a user that does not exist")
     @Test
     void get_userNotFound() throws Exception {
         Long userId = 10L;
@@ -75,6 +71,7 @@ public class UserControllerTest {
                 .andExpect(status().isNotFound());
     }
 
+    @DisplayName("Create a user")
     @Test
     void create_user() throws Exception {
         String name = "Test";
@@ -98,6 +95,7 @@ public class UserControllerTest {
                 .andExpect(status().isCreated());
     }
 
+    @DisplayName("Update a user")
     @Test
     void update_user() throws Exception {
         Long userId = 10L;
@@ -121,6 +119,7 @@ public class UserControllerTest {
                 .andExpect(status().isOk());
     }
 
+    @DisplayName("Update an user that does not exist")
     @Test
     void update_user_not_found() throws Exception {
         Long userId = 10L;
