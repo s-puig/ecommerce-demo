@@ -24,7 +24,7 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    private User create(User user) throws RuntimeException {
+    private User create(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         return save(user);
@@ -33,14 +33,14 @@ public class UserService {
     // TODO: We probably shouldn't use a controller DTO for domain mapping, instead should be some kind of command
     //  but it should be fine since it is a small app
     @Transactional
-    public User createUser(UserCreate userCreate) throws RuntimeException {
+    public User createUser(UserCreate userCreate) {
         User user = userMapper.createToEntity(userCreate);
 
         return create(user);
     }
 
     @Transactional
-    public User updateUser(long id, UserCreate userUpdate) throws RuntimeException {
+    public User updateUser(long id, UserCreate userUpdate) {
         Optional<User> maybeUser = findById(id);
 
         if (maybeUser.isEmpty()) throw new ResourceNotFoundException();
@@ -53,7 +53,7 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteById(long id) throws ResourceNotFoundException {
+    public void deleteById(long id) {
         if (!userRepository.existsById(id)) throw new ResourceNotFoundException();
         userRepository.deleteById(id);
     }
