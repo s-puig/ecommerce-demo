@@ -2,6 +2,8 @@ package com.demo.ecommerce.products;
 
 import com.demo.ecommerce.users.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
@@ -24,14 +26,18 @@ public class Product
     @Column(name = "id")
     private long id;
     @ManyToOne
+    @NotNull
     @JoinColumn(name = "owner_id")
     private User user;
     @Column(name = "name")
+    @NotBlank
     private String name;
     @Column(name = "description")
     private String description;
+    @Builder.Default
+    @NotNull
     @Column(name = "active")
-    private boolean active;
+    private boolean active = true;
     @CreatedDate
     @Column(name = "createdAt")
     private Instant createdAt;

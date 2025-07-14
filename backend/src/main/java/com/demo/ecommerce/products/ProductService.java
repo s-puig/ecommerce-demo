@@ -1,37 +1,49 @@
 package com.demo.ecommerce.products;
 
-import com.demo.ecommerce.common.exceptions.ResourceNotFoundException;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.Optional;
 
 @Service
+@Validated
 public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    public Optional<Product> findById(long id) {
+    public Optional<Product> findById(@Min(1) long id) {
         return findById(id, true);
     }
 
-    public Optional<Product> findById(long id, boolean showOnlyActive) {
+    public Optional<Product> findById(@Min(1) long id, boolean showOnlyActive) {
         throw new UnsupportedOperationException("Function not implemented");
     }
 
-    public Product updateById(long id, Product product) {
+    @NotNull
+    @Transactional
+    public Product updateById(@Min(1) long id, @NotNull @Valid Product product) {
         throw new UnsupportedOperationException("Function not implemented");
     }
 
-    public Product create(Product product) {
+    @NotNull
+    @Transactional
+    public Product create(@NotNull @Valid Product product) {
         throw new UnsupportedOperationException("Function not implemented");
     }
 
-    public void deleteById(long id) {
+    @Transactional
+    public void deleteById(@Min(1) long id) {
         throw new UnsupportedOperationException("Function not implemented");
     }
 
-    public Product save(Product product) {
+    @NotNull
+    @Transactional
+    public Product save(@NotNull @Valid Product product) {
         throw new UnsupportedOperationException("Function not implemented");
     }
 }
