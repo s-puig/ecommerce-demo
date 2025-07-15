@@ -4,6 +4,7 @@ import com.demo.ecommerce.common.exceptions.ResourceNotFoundException;
 import com.demo.ecommerce.users.dto.UserCreate;
 import com.demo.ecommerce.users.dto.UserPublicData;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,13 +33,13 @@ public class UserController {
 
     @Operation(summary = "Update user by id")
     @PutMapping("{id}")
-    public ResponseEntity<UserPublicData> updateUser(@PathVariable long id, @RequestBody UserCreate user) {
+    public ResponseEntity<UserPublicData> updateUser(@PathVariable long id, @Valid @RequestBody UserCreate user) {
         return ResponseEntity.ok().body(userMapper.entityToResponse(userService.updateUser(id, user)));
     }
 
     @Operation(summary = "Create new user")
     @PostMapping
-    public ResponseEntity<UserPublicData> addUser(@RequestBody UserCreate createUser) {
+    public ResponseEntity<UserPublicData> addUser(@Valid @RequestBody UserCreate createUser) {
         User user = userService.createUser(createUser);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("{id}").build(user.getId());
         return ResponseEntity.created(location).body(userMapper.entityToResponse(user));
