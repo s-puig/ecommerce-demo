@@ -22,26 +22,25 @@ import java.time.Instant;
 public class Product
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id", nullable = false)
     private long id;
-    @ManyToOne
-    @NotNull
-    @JoinColumn(name = "owner_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id", nullable = false)
     private User user;
-    @Column(name = "name")
-    @NotBlank
+    @Column(name = "name", nullable = false)
     private String name;
     @Column(name = "description")
     private String description;
     @Builder.Default
-    @NotNull
-    @Column(name = "active")
+    @Column(name = "active", nullable = false)
     private boolean active = true;
     @CreatedDate
-    @Column(name = "createdAt")
+    @Column(name = "createdAt", nullable = false)
     private Instant createdAt;
     @LastModifiedDate
-    @Column(name = "updatedAt")
+    @Column(name = "updatedAt", nullable = false)
     private Instant updatedAt;
+    @Column(name = "deletedAt")
+    private Instant deletedAt;
 }
