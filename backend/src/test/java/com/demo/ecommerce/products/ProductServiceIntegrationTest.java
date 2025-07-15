@@ -10,6 +10,7 @@ import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.EnumSet;
 
@@ -18,9 +19,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @Tag("Integration")
 @SpringBootTest
 public class ProductServiceIntegrationTest {
-    @Autowired
-    private EntityManager entityManager;
-
     @Autowired
     private UserRepository userRepository;
 
@@ -31,6 +29,7 @@ public class ProductServiceIntegrationTest {
     private ProductService productService;
 
     @DisplayName("Create a product")
+    @Transactional
     @Test
     void create() {
         assertFalse(productRepository.existsById(1L));
@@ -74,6 +73,7 @@ public class ProductServiceIntegrationTest {
     }
 
     @DisplayName("Update a product by id")
+    @Transactional
     @Test
     void updateById(){
         User ogUser = userRepository.save(User.builder().name("Test User").email("test@outlook.com").role(Role.CUSTOMER).password("1234").build());
@@ -97,6 +97,7 @@ public class ProductServiceIntegrationTest {
     }
 
     @DisplayName("Update a non-existing product by id throws a ResourceNotFoundException")
+    @Transactional
     @Test
     void updateByIdNotFound(){
         final long ID = Long.MAX_VALUE;
@@ -109,6 +110,7 @@ public class ProductServiceIntegrationTest {
     }
 
     @DisplayName("Delete a product by id")
+    @Transactional
     @Test
     void deleteById(){
         User user = userRepository.save(User.builder().name("Test User").email("test@outlook.com").role(Role.CUSTOMER).password("1234").build());
@@ -121,6 +123,7 @@ public class ProductServiceIntegrationTest {
     }
 
     @DisplayName("Delete a non-existing product by id throws a ResourceNotFoundException")
+    @Transactional
     @Test
     void deleteByIdNotFound(){
         final long ID = Long.MAX_VALUE;
@@ -130,6 +133,7 @@ public class ProductServiceIntegrationTest {
     }
 
     @DisplayName("Delete an already deleted product by id throws a ResourceNotFoundException")
+    @Transactional
     @Test
     void deleteByIdAlreadyDeleted(){
         final long ID = Long.MAX_VALUE;

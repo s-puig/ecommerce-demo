@@ -22,7 +22,7 @@ import java.time.Instant;
 public class Product
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private long id;
     @ManyToOne(fetch = FetchType.LAZY)
