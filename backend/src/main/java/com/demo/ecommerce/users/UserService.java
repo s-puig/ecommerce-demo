@@ -2,13 +2,16 @@ package com.demo.ecommerce.users;
 
 import com.demo.ecommerce.common.exceptions.ResourceNotFoundException;
 import com.demo.ecommerce.users.dto.UserCreate;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.Optional;
 
+@Validated
 @Service
 public class UserService {
     @Autowired
@@ -33,14 +36,14 @@ public class UserService {
     // TODO: We probably shouldn't use a controller DTO for domain mapping, instead should be some kind of command
     //  but it should be fine since it is a small app
     @Transactional
-    public User createUser(UserCreate userCreate) throws RuntimeException {
+    public User createUser(@Valid UserCreate userCreate) throws RuntimeException {
         User user = userMapper.createToEntity(userCreate);
 
         return create(user);
     }
 
     @Transactional
-    public User updateUser(long id, UserCreate userUpdate) throws RuntimeException {
+    public User updateUser(long id, @Valid UserCreate userUpdate) throws RuntimeException {
         Optional<User> maybeUser = findById(id);
 
         if (maybeUser.isEmpty()) throw new ResourceNotFoundException();
