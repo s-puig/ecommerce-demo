@@ -48,7 +48,7 @@ public class UserController {
     @Operation(summary = "Delete user by id")
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@PathVariable long id) throws ResourceNotFoundException {
+    public void deleteUser(@PathVariable long id) {
         userService.deleteById(id);
     }
 
