@@ -62,7 +62,6 @@ public class UserService {
     }
 
     @Transactional
-    // TODO: Throw errors on validation error.
     public User save(User user) {
         return userRepository.save(user);
     }
