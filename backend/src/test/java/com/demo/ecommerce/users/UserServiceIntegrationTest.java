@@ -50,7 +50,6 @@ public class UserServiceIntegrationTest {
         String password = "TestPass123";
         Role role = Role.CUSTOMER;
 
-
         User user = userService.createUser(new UserCreate(name, email, password, role));
 
         assertTrue(userRepository.existsById(user.getId()));
