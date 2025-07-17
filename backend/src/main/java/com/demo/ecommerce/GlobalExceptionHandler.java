@@ -1,5 +1,6 @@
 package com.demo.ecommerce;
 
+import com.demo.ecommerce.common.exceptions.BadRequestException;
 import com.demo.ecommerce.common.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,5 +27,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<?> handleResourceNotFound(ResourceNotFoundException exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new RuntimeError("Resource Not Found", exception.getMessage(), Instant.now()));
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<?> handleResourceNotFound(BadRequestException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new RuntimeError("Bad Request", exception.getMessage(), Instant.now()));
     }
 }
