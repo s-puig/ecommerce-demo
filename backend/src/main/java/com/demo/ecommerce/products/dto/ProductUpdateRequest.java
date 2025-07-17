@@ -15,8 +15,5 @@ public class ProductUpdateRequest {
     String name;
     String description;
     @Builder.Default
-    @Min(value = 1, message = "User id has to be a positive integer")
-    long ownerId = 0;
-    @Builder.Default
     boolean active = true;
 }
