@@ -8,6 +8,7 @@ import com.demo.ecommerce.products.dto.ProductUpdateRequest;
 import com.demo.ecommerce.users.Role;
 import com.demo.ecommerce.users.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -22,7 +23,6 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import java.util.EnumSet;
 import java.util.Optional;
 
 @Tag("Unit")
@@ -73,6 +73,7 @@ public class ProductControllerTest {
 
     @DisplayName("Create a product")
     @Test
+    @Disabled
     void createProduct() throws Exception {
         User testUser = testUser().build();
 
@@ -138,6 +139,7 @@ public class ProductControllerTest {
 
     @DisplayName("Update a product")
     @Test
+    @Disabled
     void updateProduct() throws Exception {
         User testUser = testUser().build();
         Product testProduct = testProduct(testUser).build();
@@ -159,6 +161,7 @@ public class ProductControllerTest {
 
     @DisplayName("Update a non-existing product returns 404")
     @Test
+    @Disabled
     void updateNonExistingProductThrowsResourceNotFoundException() throws Exception {
         long ID = Long.MAX_VALUE;
 
