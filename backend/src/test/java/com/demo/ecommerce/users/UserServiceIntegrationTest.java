@@ -2,8 +2,6 @@ package com.demo.ecommerce.users;
 
 import com.demo.ecommerce.common.exceptions.ResourceNotFoundException;
 import com.demo.ecommerce.users.dto.UserCreate;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,30 +19,28 @@ public class UserServiceIntegrationTest {
     @Autowired
     private UserRepository userRepository;
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
-    @BeforeEach
-    public void beforeEach() {
-        userRepository.save(User.builder().name("Test").email("test@outlook.com").role(Role.CUSTOMER).password("Pass123").build());
+    public static User.UserBuilder testUser(){
+        return User.builder().name("Test").email("test@outlook.com").role(Role.CUSTOMER).password("Pass123");
     }
 
     @DisplayName("Find an existing user by id")
     @Test
     public void findByIdExists() {
-        assertTrue(userService.findById(1).isPresent());
+        User user = userRepository.save(testUser().build());
+        assertTrue(userService.findById(user.getId()).isPresent());
     }
 
     @DisplayName("Find a non-existing user is empty")
     @Test
     public void findByIdNotFound() {
-        assertTrue(userService.findById(2).isEmpty());
+        final long ID = Long.MAX_VALUE;
+        assertFalse(userRepository.existsById(ID));
+        assertTrue(userService.findById(ID).isEmpty());
     }
 
     @DisplayName("Creates an user")
     @Test
     public void create() {
-        assertFalse(userRepository.existsById(2L));
         String name = "Test1";
         String email = "test1@outlook.com";
         String password = "TestPass123";
@@ -58,20 +54,18 @@ public class UserServiceIntegrationTest {
     @DisplayName("Update an existing user by id")
     @Test
     public void updateByIdExists(){
-        assertTrue(userRepository.existsById(1L));
-        //noinspection OptionalGetWithoutIsPresent
-        User ogUser = userRepository.findById(1L).get();
+        User ogUser = userRepository.save(testUser().build());
 
         String name = "NewTest";
         String email = "new@mail.com";
         Role role = Role.ADMINISTRATOR;
-        UserCreate newUserCommand = new UserCreate(name, email, "Pass123", role);
+        UserCreate newUserCommand = new UserCreate(name, email, "TestPass123", role);
 
         assertNotEquals(newUserCommand.getName(), ogUser.getName());
         assertNotEquals(newUserCommand.getEmail(), ogUser.getEmail());
         assertNotEquals(newUserCommand.getRole(), ogUser.getRole());
 
-        User newUser = userService.updateUser(1L, newUserCommand);
+        User newUser = userService.updateUser(ogUser.getId(), newUserCommand);
 
         assertEquals(newUserCommand.getName(), newUser.getName());
         assertEquals(newUserCommand.getEmail(), newUser.getEmail());
@@ -81,38 +75,33 @@ public class UserServiceIntegrationTest {
     @DisplayName("Update an non-existing user by id throws a ResourceNotFoundException")
     @Test
     public void updateByIdNotFound(){
-        assertFalse(userRepository.existsById(Long.MAX_VALUE));
-
-        String name = "NewTest";
-        String email = "new@mail.com";
-        Role role = Role.ADMINISTRATOR;
-
-        assertThrows(ResourceNotFoundException.class, () -> userService.updateUser(Long.MAX_VALUE, new UserCreate(name, email, "Pass123", role)));
-
-
+        final long ID = Long.MAX_VALUE;
+        assertFalse(userRepository.existsById(ID));
+        assertThrows(ResourceNotFoundException.class, () -> userService.updateUser(ID, UserCreate.builder()
+                .name("NewTest")
+                .email("new@mail.com")
+                .password("Pass123")
+                .role(Role.ADMINISTRATOR)
+                .build()));
     }
 
     @DisplayName("Delete an existing user by id")
     @Test
     public void deleteByIdExists() {
-        assertTrue(userRepository.existsById(1L));
+        User user = userRepository.save(testUser().build());
+        assertTrue(userRepository.existsById(user.getId()));
 
-        userService.deleteById(1);
+        userService.deleteById(user.getId());
 
-        assertFalse(userRepository.existsById(1L));
+        assertFalse(userRepository.existsById(user.getId()));
     }
 
     @DisplayName("Delete a non-existing user by id throws a ResourceNotFoundException")
     @Test
     public void deleteByIdNotFound(){
-        assertFalse(userRepository.existsById(Long.MAX_VALUE));
+        final long ID = Long.MAX_VALUE;
+        assertFalse(userRepository.existsById(ID));
 
-        assertThrows(ResourceNotFoundException.class, () -> userService.deleteById(Long.MAX_VALUE));
-    }
-
-    @AfterEach
-    public void afterEach() {
-        userRepository.deleteAll();
-        entityManager.createNativeQuery("ALTER TABLE users ALTER COLUMN id RESTART WITH 1").executeUpdate();
+        assertThrows(ResourceNotFoundException.class, () -> userService.deleteById(ID));
     }
 }
