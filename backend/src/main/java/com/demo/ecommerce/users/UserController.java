@@ -23,6 +23,13 @@ public class UserController {
     @Autowired
     UserMapper userMapper;
 
+    /**
+     * Retrieves a user by their ID and returns the user's public data.
+     *
+     * @param id the ID of the user to retrieve
+     * @return a ResponseEntity containing the UserPublicData if found, or a NOT_FOUND status if not found
+     * @throws ResourceNotFoundException if no user with the given ID is found
+     */
     @Operation(summary = "Get user by id")
     @GetMapping("{id}")
     public ResponseEntity<UserPublicData> getUser(@PathVariable long id){
@@ -31,12 +38,26 @@ public class UserController {
         return ResponseEntity.ok().body(userMapper.entityToResponse(user.get()));
     }
 
+    /**
+     * Updates a user by their ID.
+     *
+     * @param id   the ID of the user to update
+     * @param user the {@link UserCreate} object containing the updated user data
+     * @return a ResponseEntity containing the updated {@link UserPublicData}
+     * @throws ResourceNotFoundException if no user is found with the specified ID
+     */
     @Operation(summary = "Update user by id")
     @PutMapping("{id}")
     public ResponseEntity<UserPublicData> updateUser(@PathVariable long id, @Valid @RequestBody UserCreate user) {
         return ResponseEntity.ok().body(userMapper.entityToResponse(userService.updateUser(id, user)));
     }
 
+    /**
+     * Creates a new user in the system.
+     *
+     * @param createUser The UserCreate object containing the details of the user to be created.
+     * @return A ResponseEntity containing the newly created UserPublicData with HTTP status code 201 (Created).
+     */
     @Operation(summary = "Create new user")
     @PostMapping
     public ResponseEntity<UserPublicData> addUser(@Valid @RequestBody UserCreate createUser) {
@@ -45,63 +66,16 @@ public class UserController {
         return ResponseEntity.created(location).body(userMapper.entityToResponse(user));
     }
 
+    /**
+     * Deletes a user by their unique identifier.
+     *
+     * @param id the unique identifier of the user to be deleted
+     * @throws ResourceNotFoundException if no user is found with the specified ID
+     */
     @Operation(summary = "Delete user by id")
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable long id) {
         userService.deleteById(id);
     }
-
-    /*  Patches a User resource by using JSON Merge (see RFC 7000).
-        <p>This method accepts a JSON payload with one or more fields to update.
-        Fields not provided in the request will remain unchanged.</p>
-        <p>Example request body:</p>
-        <pre>
-        {
-            "email": "mail@no-reply.com",
-            "phone": "+34 123-456-789"
-        }
-        </pre>
-        @param id Id of the user
-        @param user User with fields to be updated
-        @return Response containing the patched UserDTO
-        @throws ResourceNotFoundException if no user with the given ID exists
-    */
-    /*
-    TODO: Finish merge patch
-    @Operation(summary = "Patch a user")
-    @PatchMapping(path = "{id}", consumes = "application/merge-patch+json")
-    public ResponseEntity<UserPublicData> patchMergeUser(@PathVariable long id, @RequestBody UserPublicData user) {
-        return ResponseEntity.badRequest().body(user);
-    }
-    */
-
-
-    /*
-     * Applies a JSON Patch (RFC 6902) to a User resource.
-     *
-     * <p>The request body must be a JSON Patch document describing the operations
-     * to apply (add, remove, replace, etc.).</p>
-     *
-     * <p>Example request body:</p>
-     * <pre>
-     * [
-     *   { "op": "replace", "path": "/email", "value": "new.email@example.com" },
-     *   { "op": "add", "path": "/phone", "value": "123-456-7890" }
-     * ]
-     * </pre>
-     *
-     * @param id the ID of the user to patch
-     * @param patch the JSON Patch document
-     * @return ResponseEntity containing the updated UserDTO
-     * @throws ResourceNotFoundException if no user with the given ID exists
-     * @throws PatchFailedException if the patch cannot be applied
-     */
-    /*
-    TODO: Finish patch
-    @PatchMapping(path = "{id}", consumes = "application/json-patch+json")
-    public ResponseEntity<UserResponse> patchUser(@PathVariable long id, @RequestBody String user) {
-        return ResponseEntity.ok().body(userMapper.entityToResponse(userService.find(id).get()));
-    }
-    */
 }
