@@ -9,13 +9,13 @@ public enum ProductExcludeFlag {
     INACTIVE {
         @Override
         public Predicate toPredicate(Root<Product> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
-            return builder.isTrue(root.get("active"));
+            return builder.isTrue(root.get(Product_.active));
         }
     },
     DELETED {
         @Override
         public Predicate toPredicate(Root<Product> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
-            return builder.isNull(root.get("deletedAt"));
+            return builder.isNull(root.get(Product_.deletedAt));
         }
     };
 
