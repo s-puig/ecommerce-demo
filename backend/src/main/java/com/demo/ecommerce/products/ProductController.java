@@ -9,7 +9,6 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -24,18 +23,39 @@ public class ProductController {
     @Autowired
     ProductMapper productMapper;
 
+    /**
+     * Retrieves a product by its ID.
+     *
+     * @param id the unique identifier of the product to be retrieved
+     * @return a ResponseEntity containing the ProductResponse object with HTTP status code 200 (OK)
+     * @throws ResourceNotFoundException if the product with the specified ID does not exist
+     */
     @Operation(summary = "Get a product by id")
     @GetMapping("{id}")
     public ResponseEntity<ProductResponse> get(@PathVariable long id) {
         return ResponseEntity.ok(productMapper.entityToResponse(productService.findById(id).orElseThrow(ResourceNotFoundException::new)));
     }
 
+    /**
+     * Updates a product by its ID.
+     *
+     * @param id      the ID of the product to update
+     * @param request the ProductUpdateRequest containing the updated details of the product
+     * @return a ResponseEntity containing the updated ProductResponse object
+     * @throws ResourceNotFoundException if the product with the given ID is not found
+     */
     @Operation(summary = "Update a product by id")
     @PutMapping("{id}")
     public ResponseEntity<ProductResponse> update(@PathVariable long id, @Valid ProductUpdateRequest request) {
         return ResponseEntity.ok().body(productMapper.entityToResponse(productService.updateById(id, request)));
     }
 
+    /**
+     * Creates a new product.
+     *
+     * @param request the ProductCreateRequest containing details of the product to be created
+     * @return ResponseEntity containing the created ProductResponse object and HTTP 201 Created status with Location header set to the newly created product's URI
+     */
     @Operation(summary = "Create a product")
     @PostMapping
     public ResponseEntity<ProductResponse> create(@Valid ProductCreateRequest request) {
@@ -44,6 +64,12 @@ public class ProductController {
         return ResponseEntity.created(location).body(productMapper.entityToResponse(product));
     }
 
+    /**
+     * Deletes a product by its ID.
+     *
+     * @param id the ID of the product to delete
+     * @return a ResponseEntity with no content if successful
+     */
     @Operation(summary = "Soft-delete a product by id")
     @DeleteMapping("{id}")
     public ResponseEntity<?> delete(@PathVariable long id) {
